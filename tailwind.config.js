@@ -5,7 +5,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        obsidian: "#050505",
+        obsidian: "#060A14",
         alabaster: "#FAFAFA",
         graphite: {
           DEFAULT: "#171717",
@@ -21,6 +21,11 @@ module.exports = {
           DEFAULT: "#D4AF37",
           light: "#f4e5a1",
         },
+        cyan: {
+          DEFAULT: "#22D3EE",
+          soft: "#67E8F9",
+          dim: "rgba(34,211,238,0.15)",
+        },
       },
       fontFamily: {
         serif: ["var(--font-playfair)", "serif"],
@@ -34,6 +39,7 @@ module.exports = {
       boxShadow: {
         glow: "0 0 40px rgba(0,255,135,0.15)",
         "glow-gold": "0 0 40px rgba(212,175,55,0.18)",
+        "glow-cyan": "0 0 40px rgba(34,211,238,0.18)",
         panel: "0 8px 40px rgba(0,0,0,0.5)",
       },
       keyframes: {

@@ -6,6 +6,7 @@ import { Send, Home, GraduationCap, Bot, Sparkles } from "lucide-react";
 import { fadeUp, staggerContainer } from "@/utils/variants";
 import { buildWhatsAppLink } from "@/utils/config";
 import { cn } from "@/utils/cn";
+import MagneticButton from "@/components/ui/MagneticButton";
 
 const SCOPES = [
   { id: "real-estate", label: "Real Estate Engine", icon: Home },
@@ -143,13 +144,15 @@ export default function ContactTerminal() {
             />
           </div>
 
-          <button
+          <MagneticButton
+            as="button"
             type="submit"
-            className="cursor-pointer-target mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-emerald px-6 py-4 font-mono text-xs uppercase tracking-wider text-obsidian transition-transform hover:scale-[1.01]"
+            wrapperClassName="mt-8 block w-full"
+            className="cursor-pointer-target flex w-full items-center justify-center gap-2 rounded-full bg-emerald px-6 py-4 font-mono text-xs uppercase tracking-wider text-obsidian transition-transform hover:scale-[1.01]"
           >
             Transmit Brief via WhatsApp
             <Send size={14} />
-          </button>
+          </MagneticButton>
         </motion.form>
       </div>
     </section>

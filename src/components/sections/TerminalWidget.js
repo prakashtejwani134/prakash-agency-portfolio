@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlayCircle } from "lucide-react";
 import { pulseHighlight } from "@/utils/highlight";
+import RealEstateDemoOverlay from "@/components/ui/RealEstateDemoOverlay";
 
 const BOOT_LINES = [
   "$ system.init --target=production",
@@ -21,9 +22,10 @@ const COMMANDS = [
     label: "run real-estate-demo",
     response: [
       "> loading Aravalli Homes engine...",
-      "> redirecting viewport → Live Showcase ✓",
+      "> launching live simulation overlay ✓",
     ],
-    action: () => pulseHighlight("aravalli-card"),
+    highlight: "aravalli-card",
+    overlay: true,
   },
   {
     id: "coaching-demo",
@@ -32,7 +34,7 @@ const COMMANDS = [
       "> spinning up Coaching System module...",
       "> redirecting viewport → Business OS grid ✓",
     ],
-    action: () => pulseHighlight("coaching-tile"),
+    highlight: "coaching-tile",
   },
   {
     id: "check-system-speed",
@@ -41,7 +43,7 @@ const COMMANDS = [
       "> pinging edge network...",
       "> lighthouse: 100/100 · latency 42ms ✓",
     ],
-    action: () => pulseHighlight("performance-card"),
+    highlight: "performance-card",
   },
 ];
 
@@ -50,6 +52,7 @@ export default function TerminalWidget() {
   const [lineIndex, setLineIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [log, setLog] = useState([]);
+  const [demoOpen, setDemoOpen] = useState(false);
   const logEndRef = useRef(null);
 
   useEffect(() => {
@@ -91,7 +94,8 @@ export default function TerminalWidget() {
       ...prev,
       { key: `${command.id}-${Date.now()}`, cmd: command.label, response: command.response },
     ]);
-    command.action();
+    if (command.highlight) pulseHighlight(command.highlight);
+    if (command.overlay) setDemoOpen(true);
   };
 
   return (
@@ -99,9 +103,16 @@ export default function TerminalWidget() {
       <div className="flex items-center gap-1.5 border-b border-white/[0.08] px-4 py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
         <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
-        <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+        <span className="h-2.5 w-2.5 animate-pulseDot rounded-full bg-[#27c93f]" />
         <span className="ml-2 font-mono text-[11px] text-alabaster/40">
           architecture.sh
+        </span>
+        <span className="ml-auto flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-emerald/70">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald opacity-60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald" />
+          </span>
+          live
         </span>
       </div>
 
@@ -144,6 +155,8 @@ export default function TerminalWidget() {
           </button>
         ))}
       </div>
+
+      <RealEstateDemoOverlay open={demoOpen} onClose={() => setDemoOpen(false)} />
     </div>
   );
 }

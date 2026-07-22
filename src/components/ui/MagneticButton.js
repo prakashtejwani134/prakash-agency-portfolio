@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 export default function MagneticButton({
   children,
   className,
+  wrapperClassName,
   as: Comp = "button",
   strength = 0.35,
   ...props
@@ -31,7 +32,7 @@ export default function MagneticButton({
       onMouseLeave={reset}
       animate={{ x: pos.x, y: pos.y }}
       transition={{ type: "spring", stiffness: 150, damping: 12, mass: 0.6 }}
-      className="inline-block cursor-pointer-target"
+      className={cn("inline-block cursor-pointer-target", wrapperClassName)}
     >
       <Comp
         className={cn(

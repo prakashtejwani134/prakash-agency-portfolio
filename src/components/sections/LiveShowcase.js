@@ -48,9 +48,13 @@ export default function LiveShowcase() {
           >
             Aravalli Homes —{" "}
             <span className="text-gradient-gold not-italic">
-              A $100k-Level Luxury Real Estate Engine
+              A High-Converting Real Estate Engine
             </span>
           </motion.h2>
+          <motion.p variants={fadeUp} className="mt-4 text-alabaster/55">
+            Modern, sleek, and powered by Vercel Edge, Next.js 15, and
+            instant WhatsApp lead capture.
+          </motion.p>
         </motion.div>
 
         <motion.div
@@ -69,14 +73,14 @@ export default function LiveShowcase() {
             animate={{ rotateX: tilt.x, rotateY: tilt.y }}
             transition={{ type: "spring", stiffness: 150, damping: 18 }}
             style={{ transformStyle: "preserve-3d" }}
-            className="glass-panel overflow-hidden shadow-panel"
+            className="glass-panel overflow-hidden shadow-panel transition-[border-color,box-shadow] duration-300 hover:border-cyan/30 hover:shadow-glow-cyan"
           >
             <div className="flex items-center gap-2 border-b border-white/[0.08] bg-black/40 px-5 py-3.5">
               <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+              <span className="h-2.5 w-2.5 animate-pulseDot rounded-full bg-[#27c93f]" />
               <div className="ml-3 flex-1 rounded-full bg-white/[0.05] px-3 py-1 font-mono text-[11px] text-alabaster/40">
-                aravallihomes.com
+                aravali-homes-seven.vercel.app
               </div>
             </div>
 
@@ -87,15 +91,15 @@ export default function LiveShowcase() {
               <div className="relative z-10 flex h-full flex-col justify-between">
                 <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-gold/80">
                   <Home size={13} />
-                  Luxury Real Estate Engine
+                  Real Estate Engine · Live Deployment
                 </div>
                 <div>
                   <h3 className="font-serif text-3xl italic text-alabaster md:text-5xl">
-                    Own the Aravalli Skyline.
+                    A high-converting, modern real estate engine.
                   </h3>
                   <p className="mt-3 max-w-md text-sm text-alabaster/50 md:text-base">
-                    A private, AI-qualified property engine — every visitor
-                    routed instantly to a live agent on WhatsApp.
+                    Powered by Vercel Edge, Next.js 15, and AI-qualified lead
+                    routing — every visitor dispatched instantly on WhatsApp.
                   </p>
                 </div>
               </div>

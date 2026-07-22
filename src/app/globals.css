@@ -17,14 +17,14 @@
 
   ::selection {
     background: rgba(0, 255, 135, 0.25);
-    color: #050505;
+    color: #060a14;
   }
 
   ::-webkit-scrollbar {
     width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #050505;
+    background: #060a14;
   }
   ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.12);
@@ -61,6 +61,13 @@
 
   .text-gradient-emerald {
     background: linear-gradient(135deg, #00ff87 0%, #7dffbe 50%, #00d975 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-cyan {
+    background: linear-gradient(135deg, #22d3ee 0%, #67e8f9 50%, #22d3ee 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

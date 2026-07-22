@@ -1,12 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { buildWhatsAppLink } from "@/utils/config";
+import { buildWhatsAppLink, DEFAULT_WHATSAPP_MESSAGE } from "@/utils/config";
 
 export default function WhatsAppButton() {
-  const href = buildWhatsAppLink(
-    "Hi Prakash, I'd like to discuss a project for my business."
-  );
+  const href = buildWhatsAppLink(DEFAULT_WHATSAPP_MESSAGE);
 
   return (
     <motion.a

@@ -6,6 +6,7 @@ import GrainOverlay from "@/components/ui/GrainOverlay";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
+import AIAssistantWidget from "@/components/ui/AIAssistantWidget";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -62,6 +63,7 @@ export default function RootLayout({ children }) {
           {children}
           <Footer />
           <WhatsAppButton />
+          <AIAssistantWidget />
         </SmoothScrollProvider>
       </body>
     </html>

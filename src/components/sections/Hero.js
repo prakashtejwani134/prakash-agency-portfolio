@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Compass } from "lucide-react";
+import { ArrowUpRight, Compass, Play } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import VideoOverviewModal from "@/components/ui/VideoOverviewModal";
 import TerminalWidget from "@/components/sections/TerminalWidget";
 import { staggerContainer, wordReveal, fadeUp } from "@/utils/variants";
 
@@ -13,6 +15,8 @@ const HEADLINE_LINES = [
 ];
 
 export default function Hero() {
+  const [videoOpen, setVideoOpen] = useState(false);
+
   return (
     <section
       id="hero"
@@ -20,6 +24,7 @@ export default function Hero() {
     >
       <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
       <div className="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-emerald/[0.08] blur-[120px]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-[400px] w-[600px] -translate-x-1/3 translate-y-1/3 rounded-full bg-cyan/[0.06] blur-[120px]" />
 
       <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr]">
         <div>
@@ -99,6 +104,15 @@ export default function Hero() {
                 className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               />
             </MagneticButton>
+            <button
+              onClick={() => setVideoOpen(true)}
+              className="cursor-pointer-target group flex items-center gap-2 rounded-full px-2 py-4 font-mono text-xs uppercase tracking-wider text-alabaster/60 transition-colors hover:text-emerald"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.12] transition-colors group-hover:border-emerald/40">
+                <Play size={12} className="ml-0.5" fill="currentColor" />
+              </span>
+              Watch 90s System Overview
+            </button>
           </motion.div>
         </div>
 
@@ -132,6 +146,8 @@ export default function Hero() {
           </div>
         </motion.div>
       </div>
+
+      <VideoOverviewModal open={videoOpen} onClose={() => setVideoOpen(false)} />
     </section>
   );
 }

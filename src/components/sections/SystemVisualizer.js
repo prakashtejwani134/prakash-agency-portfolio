@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Megaphone, Cpu, Filter, MessageCircle, X, TrendingUp } from "lucide-react";
+import { Megaphone, Cpu, Filter, MessageCircle, X, TrendingUp, Timer } from "lucide-react";
 import { fadeUp, staggerContainer } from "@/utils/variants";
 import { cn } from "@/utils/cn";
 
@@ -14,6 +14,12 @@ const NODES = [
     advantage:
       "Server-side conversion tracking captures every paid click with zero data loss from ad blockers or iOS ATT restrictions — your ad platforms see the truth.",
     boost: "+18% attribution accuracy",
+    latency: "<80ms",
+    stack: ["Meta CAPI", "Server-Side GTM", "Vercel Edge Functions"],
+    snippet: `await fetch(CAPI_ENDPOINT, {
+  method: "POST",
+  body: JSON.stringify(event),
+});`,
   },
   {
     id: "ai-engine",
@@ -22,6 +28,10 @@ const NODES = [
     advantage:
       "A purpose-built Next.js + AI layer renders sub-second pages and scores visitor intent in real time, before they've even scrolled.",
     boost: "2.3x more visitors reach the offer",
+    latency: "<180ms",
+    stack: ["Next.js 15", "Edge Runtime", "Anthropic API"],
+    snippet: `const score = await ai.scoreLead(payload);
+if (score.intent > 0.7) qualify(payload);`,
   },
   {
     id: "lead-qualification",
@@ -30,6 +40,10 @@ const NODES = [
     advantage:
       "The AI cross-references budget, timeline, and intent signals before a lead ever reaches your inbox — only sales-ready prospects pass through.",
     boost: "3.4x higher close rate",
+    latency: "<120ms",
+    stack: ["Rules Engine", "Vector Match", "Postgres"],
+    snippet: `const qualified =
+  budget.match && timeline <= 30 && intentScore > 70;`,
   },
   {
     id: "whatsapp-dispatcher",
@@ -38,6 +52,11 @@ const NODES = [
     advantage:
       "Qualified leads are auto-routed to WhatsApp in under 10 seconds — no manual follow-up delay, no lead ever goes cold.",
     boost: "+60% response-driven conversion",
+    latency: "<200ms",
+    stack: ["WhatsApp Business API", "FastCallFlow AI", "Webhook Queue"],
+    snippet: `await whatsapp.send(lead.phone, template.instantReply);
+await fastCallFlow.dispatch(lead.phone);`,
+    footnote: "Voice dispatch handled by FastCallFlow™ — see the module below.",
   },
 ];
 
@@ -160,12 +179,44 @@ export default function SystemVisualizer() {
                   {activeNode.advantage}
                 </p>
 
-                <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.06] px-4 py-2">
-                  <TrendingUp size={14} className="text-gold" />
-                  <span className="font-mono text-xs uppercase tracking-wider text-gold">
-                    {activeNode.boost}
-                  </span>
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.06] px-4 py-2">
+                    <TrendingUp size={14} className="text-gold" />
+                    <span className="font-mono text-xs uppercase tracking-wider text-gold">
+                      {activeNode.boost}
+                    </span>
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald/25 bg-emerald/[0.06] px-4 py-2">
+                    <Timer size={14} className="text-emerald" />
+                    <span className="font-mono text-xs uppercase tracking-wider text-emerald">
+                      {activeNode.latency} latency
+                    </span>
+                  </div>
                 </div>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {activeNode.stack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-alabaster/55"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                <pre className="mt-6 overflow-x-auto rounded-2xl border border-white/[0.08] bg-black/50 p-4 font-mono text-[12px] leading-relaxed text-emerald/80">
+                  <code>{activeNode.snippet}</code>
+                </pre>
+
+                {activeNode.footnote && (
+                  <a
+                    href="#fastcallflow"
+                    className="cursor-pointer-target mt-4 inline-block font-mono text-[11px] text-gold/80 underline decoration-gold/30 underline-offset-4 hover:text-gold"
+                  >
+                    {activeNode.footnote}
+                  </a>
+                )}
               </div>
             </motion.div>
           )}

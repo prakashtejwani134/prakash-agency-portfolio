@@ -20,7 +20,7 @@ function LeadCounter() {
     const id = setInterval(() => setCount((c) => c + Math.ceil(Math.random() * 3)), 1400);
     return () => clearInterval(id);
   }, []);
-  return <span>{count.toLocaleString()}</span>;
+  return <span>{count.toLocaleString("en-US")}</span>;
 }
 
 function FlowDiagram() {
@@ -139,7 +139,7 @@ export default function PositioningGrid() {
           </motion.div>
 
           <motion.div variants={fadeUp} className="md:col-span-5">
-            <GlassCard id="performance-card" className="flex h-full flex-col justify-between p-8">
+            <GlassCard id="performance-card" glow="cyan" className="flex h-full flex-col justify-between p-8">
               <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-alabaster/50">
                 <Zap size={14} className="text-emerald" />
                 Sub-Second Performance
