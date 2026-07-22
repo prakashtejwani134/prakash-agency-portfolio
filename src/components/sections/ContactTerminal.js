@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Home, GraduationCap, Bot, Sparkles } from "lucide-react";
+import { Send, Home, GraduationCap, Bot, Sparkles, ShieldCheck } from "lucide-react";
 import { fadeUp, staggerContainer } from "@/utils/variants";
 import { buildWhatsAppLink } from "@/utils/config";
 import { cn } from "@/utils/cn";
@@ -58,6 +58,16 @@ export default function ContactTerminal() {
           >
             Initiate the build.
           </motion.h2>
+          <motion.div
+            variants={fadeUp}
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5"
+          >
+            <ShieldCheck size={13} className="text-emerald" />
+            <span className="font-mono text-[10.5px] uppercase tracking-wider text-alabaster/60">
+              Built with production-grade Next.js 15, Vercel Edge, and secure
+              WhatsApp APIs
+            </span>
+          </motion.div>
         </motion.div>
 
         <motion.form

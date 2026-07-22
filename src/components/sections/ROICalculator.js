@@ -1,15 +1,53 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { TrendingUp, DollarSign, IndianRupee } from "lucide-react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { TrendingUp, DollarSign, IndianRupee, Loader2 } from "lucide-react";
 import { fadeUp, staggerContainer } from "@/utils/variants";
 import { cn } from "@/utils/cn";
 
 const STATIC_RATE = 0.005;
 const ENGINE_RATE = 0.035;
 
-function AnimatedNumber({ value, prefix = "", className }) {
+const EXCHANGE_RATE_API = "https://open.er-api.com/v6/latest/USD";
+const FALLBACK_INR_RATE = 96.54;
+
+function useLiveInrRate() {
+  const [rate, setRate] = useState(FALLBACK_INR_RATE);
+  const [loading, setLoading] = useState(true);
+  const [isLive, setIsLive] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(EXCHANGE_RATE_API)
+      .then((res) => {
+        if (!res.ok) throw new Error("Exchange rate request failed");
+        return res.json();
+      })
+      .then((data) => {
+        const liveRate = data?.rates?.INR;
+        if (!cancelled && typeof liveRate === "number") {
+          setRate(liveRate);
+          setIsLive(true);
+        }
+      })
+      .catch(() => {
+        // Network/API failure — keep the FALLBACK_INR_RATE already in state.
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return { rate, loading, isLive };
+}
+
+function AnimatedNumber({ value, prefix = "", locale = "en-US", className }) {
   const motionValue = useMotionValue(value);
   const spring = useSpring(motionValue, { damping: 24, stiffness: 120 });
   const [display, setDisplay] = useState(value);
@@ -26,7 +64,7 @@ function AnimatedNumber({ value, prefix = "", className }) {
   return (
     <span className={className}>
       {prefix}
-      {Math.round(display).toLocaleString("en-US")}
+      {Math.round(display).toLocaleString(locale)}
     </span>
   );
 }
@@ -69,14 +107,27 @@ function ComparisonBar({ label, percent, tone }) {
 
 export default function ROICalculator() {
   const [visitors, setVisitors] = useState(8000);
-  const [clientValue, setClientValue] = useState(3000);
+  const [clientValue, setClientValue] = useState(3000); // always stored in base USD
   const [currency, setCurrency] = useState("$");
+  const { rate: inrRate, loading: rateLoading, isLive } = useLiveInrRate();
 
+  const isInr = currency === "₹";
+  const fxRate = isInr ? inrRate : 1;
+  const locale = isInr ? "en-IN" : "en-US";
+
+  // All ROI math runs in base USD; the live rate only scales values for display.
   const staticClients = visitors * STATIC_RATE;
   const engineClients = visitors * ENGINE_RATE;
   const staticRevenue = staticClients * clientValue;
   const engineRevenue = engineClients * clientValue;
   const extraRevenue = engineRevenue - staticRevenue;
+
+  const displayClientValue = clientValue * fxRate;
+  const displayStaticRevenue = staticRevenue * fxRate;
+  const displayEngineRevenue = engineRevenue * fxRate;
+  const displayExtraRevenue = extraRevenue * fxRate;
+  const displayMinValue = 50 * fxRate;
+  const displayMaxValue = 25000 * fxRate;
 
   const maxRevenue = Math.max(staticRevenue, engineRevenue, 1);
   const staticBarPercent = (staticRevenue / maxRevenue) * 100;
@@ -116,7 +167,38 @@ export default function ROICalculator() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="glass-panel p-8 md:p-12"
         >
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            <AnimatePresence mode="wait">
+              {isInr && (
+                <motion.span
+                  key={rateLoading ? "loading" : "rate"}
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex items-center gap-1.5 font-mono text-[10px] text-alabaster/40"
+                >
+                  {rateLoading ? (
+                    <>
+                      <Loader2 size={11} className="animate-spin text-emerald/70" />
+                      Fetching live rate…
+                    </>
+                  ) : (
+                    <>
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full",
+                          isLive ? "animate-pulseDot bg-emerald" : "bg-alabaster/30"
+                        )}
+                      />
+                      Live rate: 1 USD = ₹{inrRate.toFixed(2)}
+                      {!isLive && " (fallback)"}
+                    </>
+                  )}
+                </motion.span>
+              )}
+            </AnimatePresence>
+
             <span className="font-mono text-[10px] uppercase tracking-wider text-alabaster/40">
               Currency
             </span>
@@ -183,7 +265,7 @@ export default function ROICalculator() {
                 </label>
                 <span className="font-serif text-xl italic text-gold">
                   {currency}
-                  {clientValue.toLocaleString("en-US")}
+                  {Math.round(displayClientValue).toLocaleString(locale)}
                 </span>
               </div>
               <input
@@ -200,8 +282,14 @@ export default function ROICalculator() {
                 }}
               />
               <div className="mt-2 flex justify-between font-mono text-[10px] text-alabaster/35">
-                <span>{currency}50</span>
-                <span>{currency}25,000</span>
+                <span>
+                  {currency}
+                  {Math.round(displayMinValue).toLocaleString(locale)}
+                </span>
+                <span>
+                  {currency}
+                  {Math.round(displayMaxValue).toLocaleString(locale)}
+                </span>
               </div>
             </div>
           </div>
@@ -212,7 +300,7 @@ export default function ROICalculator() {
                 Standard Website · {(STATIC_RATE * 100).toFixed(1)}% conversion
               </p>
               <p className="mt-3 font-serif text-3xl italic text-alabaster/50">
-                <AnimatedNumber value={staticRevenue} prefix={currency} />
+                <AnimatedNumber value={displayStaticRevenue} prefix={currency} locale={locale} />
               </p>
               <p className="mt-1 font-mono text-[10px] text-alabaster/30">
                 revenue / month
@@ -224,7 +312,7 @@ export default function ROICalculator() {
                 Custom AI Architecture · {(ENGINE_RATE * 100).toFixed(1)}% conversion
               </p>
               <p className="mt-3 font-serif text-3xl italic text-emerald">
-                <AnimatedNumber value={engineRevenue} prefix={currency} />
+                <AnimatedNumber value={displayEngineRevenue} prefix={currency} locale={locale} />
               </p>
               <p className="mt-1 font-mono text-[10px] text-emerald/60">
                 revenue / month
@@ -237,19 +325,19 @@ export default function ROICalculator() {
                 Extra Monthly Revenue
               </div>
               <p className="mt-3 font-serif text-3xl italic text-gold">
-                +<AnimatedNumber value={extraRevenue} prefix={currency} />
+                +<AnimatedNumber value={displayExtraRevenue} prefix={currency} locale={locale} />
               </p>
             </div>
           </div>
 
           <div className="mt-8 space-y-4">
             <ComparisonBar
-              label={`Standard Website · ${currency}${Math.round(staticRevenue).toLocaleString("en-US")}`}
+              label={`Standard Website · ${currency}${Math.round(displayStaticRevenue).toLocaleString(locale)}`}
               percent={staticBarPercent}
               tone="alabaster"
             />
             <ComparisonBar
-              label={`Custom AI Architecture · ${currency}${Math.round(engineRevenue).toLocaleString("en-US")}`}
+              label={`Custom AI Architecture · ${currency}${Math.round(displayEngineRevenue).toLocaleString(locale)}`}
               percent={engineBarPercent}
               tone="emerald"
             />

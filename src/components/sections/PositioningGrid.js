@@ -69,7 +69,7 @@ export default function PositioningGrid() {
             variants={fadeUp}
             className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald/80"
           >
-            The Repositioning
+            Why This Works
           </motion.p>
           <motion.h2
             variants={fadeUp}

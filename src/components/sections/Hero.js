@@ -9,9 +9,10 @@ import TerminalWidget from "@/components/sections/TerminalWidget";
 import { staggerContainer, wordReveal, fadeUp } from "@/utils/variants";
 
 const HEADLINE_LINES = [
-  ["Architecting", "High-Converting"],
-  ["Digital", "Systems", "&", "AI"],
-  ["Software", "Solutions."],
+  ["I", "Build", "High-Converting"],
+  ["Websites", "&", "AI", "Lead"],
+  ["Systems", "That", "Scale"],
+  ["Your", "Business."],
 ];
 
 export default function Hero() {
@@ -72,9 +73,8 @@ export default function Hero() {
             custom={2}
             className="mt-8 max-w-lg text-base leading-relaxed text-alabaster/60 md:text-lg"
           >
-            I design and engineer business operating systems disguised as
-            websites — sub-second performance, AI-qualified leads, and
-            WhatsApp routing built in from line one.
+            From sub-second loading web apps to automated WhatsApp lead
+            qualification—built to turn your traffic into booked calls.
           </motion.p>
 
           <motion.div
@@ -86,18 +86,18 @@ export default function Hero() {
           >
             <MagneticButton
               as="a"
-              href="#systems"
+              href="#contact"
               className="rounded-full bg-alabaster px-7 py-4 font-mono text-xs uppercase tracking-wider text-obsidian transition-colors hover:bg-emerald"
             >
-              Explore Systems
+              Book a Strategy Call
               <ArrowUpRight size={14} strokeWidth={2.5} />
             </MagneticButton>
             <MagneticButton
               as="a"
-              href="#contact"
+              href="#showcase"
               className="group rounded-full border border-white/[0.12] bg-white/[0.02] px-7 py-4 font-mono text-xs uppercase tracking-wider text-alabaster transition-colors hover:border-gold/50 hover:text-gold"
             >
-              Book Consultation
+              View Live Systems
               <ArrowUpRight
                 size={14}
                 strokeWidth={2.5}

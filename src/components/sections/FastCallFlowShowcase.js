@@ -1,9 +1,27 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PhoneCall, Timer, Mic, ArrowUpRight } from "lucide-react";
+import { PhoneCall, Timer, Mic, ArrowUpRight, AlertCircle, Wrench, CheckCircle2 } from "lucide-react";
 import GlassCard from "@/components/ui/GlassCard";
 import { fadeUp, staggerContainer } from "@/utils/variants";
+
+const BREAKDOWN = [
+  {
+    icon: AlertCircle,
+    label: "Problem Solved",
+    text: "Manual lead follow-ups were taking hours — by then, most leads had already gone cold.",
+  },
+  {
+    icon: Wrench,
+    label: "The Solution Built",
+    text: "Automated voice & WhatsApp qualification, firing within 30 seconds of lead capture.",
+  },
+  {
+    icon: CheckCircle2,
+    label: "Real Result Metrics",
+    text: "Sub-30s dispatch time, 100% automated handling — no human needed until the lead is warm.",
+  },
+];
 
 const TIMELINE = [
   { time: "0:00", label: "Lead captured" },
@@ -33,7 +51,7 @@ export default function FastCallFlowShowcase() {
             variants={fadeUp}
             className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/80"
           >
-            Proprietary Module
+            Featured Systems
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -130,6 +148,33 @@ export default function FastCallFlowShowcase() {
               </div>
             </GlassCard>
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer()}
+          className="mt-5"
+        >
+          <GlassCard glow="gold" className="p-8 md:p-10">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold/70">
+              Live Proof &amp; Case Study Breakdown
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+              {BREAKDOWN.map(({ icon: Icon, label, text }) => (
+                <motion.div key={label} variants={fadeUp}>
+                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-gold/80">
+                    <Icon size={14} />
+                    {label}
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-alabaster/65">
+                    {text}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </GlassCard>
         </motion.div>
       </div>
     </section>

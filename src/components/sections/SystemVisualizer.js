@@ -10,6 +10,7 @@ const NODES = [
   {
     id: "ads-traffic",
     label: "Ads Traffic",
+    caption: "Every paid click is tracked with zero data loss.",
     icon: Megaphone,
     advantage:
       "Server-side conversion tracking captures every paid click with zero data loss from ad blockers or iOS ATT restrictions — your ad platforms see the truth.",
@@ -23,7 +24,8 @@ const NODES = [
   },
   {
     id: "ai-engine",
-    label: "Custom AI Engine",
+    label: "AI Filtering",
+    caption: "Scores visitor intent in real time, before they scroll.",
     icon: Cpu,
     advantage:
       "A purpose-built Next.js + AI layer renders sub-second pages and scores visitor intent in real time, before they've even scrolled.",
@@ -36,6 +38,7 @@ if (score.intent > 0.7) qualify(payload);`,
   {
     id: "lead-qualification",
     label: "Lead Qualification",
+    caption: "Only sales-ready leads make it to your inbox.",
     icon: Filter,
     advantage:
       "The AI cross-references budget, timeline, and intent signals before a lead ever reaches your inbox — only sales-ready prospects pass through.",
@@ -47,7 +50,8 @@ if (score.intent > 0.7) qualify(payload);`,
   },
   {
     id: "whatsapp-dispatcher",
-    label: "WhatsApp Dispatcher",
+    label: "Instantly on WhatsApp",
+    caption: "Qualified leads routed to WhatsApp in seconds.",
     icon: MessageCircle,
     advantage:
       "Qualified leads are auto-routed to WhatsApp in under 10 seconds — no manual follow-up delay, no lead ever goes cold.",
@@ -78,7 +82,7 @@ export default function SystemVisualizer() {
             variants={fadeUp}
             className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald/80"
           >
-            System Architecture
+            How It Works
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -129,6 +133,9 @@ export default function SystemVisualizer() {
                   </span>
                   <span className="text-sm font-medium text-alabaster">
                     {node.label}
+                  </span>
+                  <span className="text-[11px] leading-snug text-alabaster/45">
+                    {node.caption}
                   </span>
                 </motion.button>
 

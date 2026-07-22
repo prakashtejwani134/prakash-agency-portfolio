@@ -11,6 +11,7 @@ const LINKS = [
   { href: "#showcase", label: "Showcase" },
   { href: "#systems", label: "Systems" },
   { href: "#services", label: "Services" },
+  { href: "#process", label: "Process" },
   { href: "#roi", label: "ROI" },
   { href: "#contact", label: "Contact" },
 ];

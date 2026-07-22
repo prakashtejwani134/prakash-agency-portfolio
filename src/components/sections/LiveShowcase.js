@@ -2,7 +2,16 @@
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Gauge, Radio, MessageCircle, Home } from "lucide-react";
+import {
+  ExternalLink,
+  Gauge,
+  Radio,
+  MessageCircle,
+  Home,
+  AlertCircle,
+  Wrench,
+  CheckCircle2,
+} from "lucide-react";
 import { fadeUp, staggerContainer } from "@/utils/variants";
 import { ARAVALLI_LIVE_URL } from "@/utils/config";
 
@@ -10,6 +19,24 @@ const METRICS = [
   { icon: Gauge, label: "Speed", value: "100", tone: "text-emerald" },
   { icon: Radio, label: "Conversion Engine", value: "Active", tone: "text-emerald" },
   { icon: MessageCircle, label: "Lead Routing", value: "WhatsApp", tone: "text-gold" },
+];
+
+const BREAKDOWN = [
+  {
+    icon: AlertCircle,
+    label: "Problem Solved",
+    text: "Generic real-estate sites load slowly and let interested leads go cold before anyone replies.",
+  },
+  {
+    icon: Wrench,
+    label: "The Solution Built",
+    text: "A sub-second Next.js 15 engine on Vercel Edge, with every visitor routed straight to WhatsApp.",
+  },
+  {
+    icon: CheckCircle2,
+    label: "Real Result Metrics",
+    text: "100 Lighthouse performance score, leads reaching WhatsApp in seconds — zero manual delay.",
+  },
 ];
 
 export default function LiveShowcase() {
@@ -40,7 +67,7 @@ export default function LiveShowcase() {
             variants={fadeUp}
             className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald/80"
           >
-            Live Proof, Not a Mockup
+            Live Case Studies
           </motion.p>
           <motion.h2
             variants={fadeUp}
@@ -139,6 +166,33 @@ export default function LiveShowcase() {
               </a>
             </div>
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer()}
+          className="mt-5"
+        >
+          <div className="glass-panel p-8 md:p-10">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald/70">
+              Live Proof &amp; Case Study Breakdown
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
+              {BREAKDOWN.map(({ icon: Icon, label, text }) => (
+                <motion.div key={label} variants={fadeUp}>
+                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-emerald/80">
+                    <Icon size={14} />
+                    {label}
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-alabaster/65">
+                    {text}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
