@@ -14,29 +14,8 @@ const WHATSAPP_HANDOFF = {
   cta: true,
 };
 
-function getResponse(input) {
-  const q = input.toLowerCase();
-
-  if (/(price|pricing|cost|budget|quote)/.test(q)) {
-    return "Systems are scoped per project — most Custom Lead Engines fall in the $3k–$8k range depending on AI qualification and WhatsApp/FastCallFlow depth.";
-  }
-  if (/(speed|latency|fast|load|performance)/.test(q)) {
-    return "Sub-second page loads (Lighthouse 100) and a full lead-to-WhatsApp dispatch in under 30 seconds — most of that is the AI qualification step.";
-  }
-  if (/(whatsapp|routing|route|dispatch)/.test(q)) {
-    return "Every qualified lead is auto-routed to WhatsApp within seconds of scoring — no manual follow-up delay, ever.";
-  }
-  if (/(fastcallflow|voice|call)/.test(q)) {
-    return "FastCallFlow™ is the proprietary voice layer — it fires an automated AI qualification call within 30 seconds of lead capture, before routing to WhatsApp.";
-  }
-  if (/(real estate|aravalli|property)/.test(q)) {
-    return "The Aravalli Homes deployment above runs the full engine — AI-qualified lead scoring, sub-second Vercel Edge delivery, and instant WhatsApp dispatch. Check the Showcase section for the architecture.";
-  }
-  if (/(coaching)/.test(q)) {
-    return "The Coaching System variant qualifies applicants by budget and readiness before a call is ever booked — same core architecture, different funnel.";
-  }
-  return "Good question — for anything this specific, Prakash himself answers faster than I do.";
-}
+const FALLBACK_REPLY =
+  "Connection hiccup on my end — try again in a moment, or message Prakash directly on WhatsApp.";
 
 export default function AIAssistantWidget() {
   const [open, setOpen] = useState(false);
@@ -55,22 +34,42 @@ export default function AIAssistantWidget() {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, typing]);
 
-  const ask = (question) => {
-    if (!question.trim()) return;
-    const userMsg = { key: `u-${Date.now()}`, from: "user", text: question };
+  const ask = async (question) => {
+    const trimmed = question.trim();
+    if (!trimmed) return;
+
+    const userMsg = { key: `u-${Date.now()}`, from: "user", text: trimmed };
+    const history = [...messages, userMsg]
+      .filter((m) => !m.cta)
+      .map((m) => ({ role: m.from === "user" ? "user" : "assistant", content: m.text }));
+
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setTyping(true);
 
-    setTimeout(() => {
-      const answer = getResponse(question);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+      });
+      const data = await res.json();
+      const answer = res.ok && data.reply ? data.reply : data.error || FALLBACK_REPLY;
+
       setMessages((prev) => [
         ...prev,
         { key: `b-${Date.now()}`, from: "bot", text: answer },
         { ...WHATSAPP_HANDOFF, key: `h-${Date.now()}` },
       ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { key: `b-${Date.now()}`, from: "bot", text: FALLBACK_REPLY },
+        { ...WHATSAPP_HANDOFF, key: `h-${Date.now()}` },
+      ]);
+    } finally {
       setTyping(false);
-    }, 700 + Math.random() * 400);
+    }
   };
 
   return (
@@ -139,8 +138,20 @@ export default function AIAssistantWidget() {
               )}
 
               {typing && (
-                <div className="max-w-[60%] rounded-2xl rounded-tl-sm border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-alabaster/40">
-                  typing…
+                <div className="flex w-fit items-center gap-1.5 rounded-2xl rounded-tl-sm border border-white/[0.08] bg-white/[0.03] px-3 py-2.5">
+                  {[0, 1, 2].map((i) => (
+                    <motion.span
+                      key={i}
+                      className="h-1.5 w-1.5 rounded-full bg-emerald/70"
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        delay: i * 0.15,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  ))}
                 </div>
               )}
               <div ref={endRef} />
